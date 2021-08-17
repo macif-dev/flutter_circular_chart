@@ -19,7 +19,7 @@ class _RandomizedRadialChartExampleState extends State<RandomizedRadialChartExam
   final GlobalKey<AnimatedCircularChartState> _chartKey = GlobalKey<AnimatedCircularChartState>();
   final _chartSize = const Size(300.0, 300.0);
   final Math.Random random = Math.Random();
-  List<CircularStackEntry> data;
+  late List<CircularStackEntry> data;
 
   @override
   void initState() {
@@ -32,7 +32,8 @@ class _RandomizedRadialChartExampleState extends State<RandomizedRadialChartExam
   void _randomize() {
     setState(() {
       data = _generateRandomData();
-      _chartKey.currentState.updateData(data);
+      var _state = _chartKey.currentState;
+      if(_state !=null ) _state.updateData(data);
     });
   }
 

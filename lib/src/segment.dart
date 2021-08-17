@@ -7,7 +7,7 @@ class CircularChartSegment extends MergeTweenable<CircularChartSegment> {
   CircularChartSegment(this.rank, this.sweepAngle, this.color);
 
   final int rank;
-  final double sweepAngle;
+  final double? sweepAngle;
   final Color color;
 
   @override
@@ -26,7 +26,7 @@ class CircularChartSegment extends MergeTweenable<CircularChartSegment> {
     return CircularChartSegment(
       begin.rank,
       lerpDouble(begin.sweepAngle, end.sweepAngle, t),
-      Color.lerp(begin.color, end.color, t),
+      Color.lerp(begin.color, end.color, t) ?? Colors.transparent,
     );
   }
 }
@@ -38,5 +38,5 @@ class CircularChartSegmentTween extends Tween<CircularChartSegment> {
   }
 
   @override
-  CircularChartSegment lerp(double t) => CircularChartSegment.lerp(begin, end, t);
+  CircularChartSegment lerp(double t) => CircularChartSegment.lerp(begin!, end!, t);
 }

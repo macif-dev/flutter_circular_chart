@@ -17,13 +17,14 @@ class _AnimatedRadialChartExampleState extends State<AnimatedRadialChartExample>
   final _chartSize = const Size(200.0, 200.0);
 
   double value = 50.0;
-  Color labelColor = Colors.blue[200];
+  Color labelColor = Colors.blue[200] ?? Colors.blue;
 
   void _increment() {
     setState(() {
       value += 10;
       List<CircularStackEntry> data = _generateChartData(value);
-      _chartKey.currentState.updateData(data);
+      var _state = _chartKey.currentState;
+      if(_state !=null ) _state.updateData(data);
     });
   }
 
@@ -31,16 +32,17 @@ class _AnimatedRadialChartExampleState extends State<AnimatedRadialChartExample>
     setState(() {
       value -= 10;
       List<CircularStackEntry> data = _generateChartData(value);
-      _chartKey.currentState.updateData(data);
+      var _state = _chartKey.currentState;
+      if(_state !=null ) _state.updateData(data);
     });
   }
 
   List<CircularStackEntry> _generateChartData(double value) {
-    Color dialColor = Colors.blue[200];
+    Color dialColor = Colors.blue[200] ?? Colors.blue;
     if (value < 0) {
-      dialColor = Colors.red[200];
+      dialColor = Colors.red[200] ?? Colors.red;
     } else if (value < 50) {
-      dialColor = Colors.yellow[200];
+      dialColor = Colors.yellow[200] ?? Colors.yellow;
     }
     labelColor = dialColor;
 
@@ -58,13 +60,13 @@ class _AnimatedRadialChartExampleState extends State<AnimatedRadialChartExample>
     ];
 
     if (value > 100) {
-      labelColor = Colors.green[200];
+      labelColor = Colors.green[200] ?? Colors.green;
 
       data.add(CircularStackEntry(
         <CircularSegmentEntry>[
           CircularSegmentEntry(
             value - 100,
-            Colors.green[200],
+            labelColor,
             rankKey: 'percentage',
           ),
         ],
@@ -78,7 +80,7 @@ class _AnimatedRadialChartExampleState extends State<AnimatedRadialChartExample>
   @override
   Widget build(BuildContext context) {
     TextStyle _labelStyle =
-        Theme.of(context).textTheme.headline6.merge(TextStyle(color: labelColor));
+        Theme.of(context).textTheme.headline6!.merge(TextStyle(color: labelColor));
 
     return Scaffold(
       appBar: AppBar(
@@ -101,19 +103,15 @@ class _AnimatedRadialChartExampleState extends State<AnimatedRadialChartExample>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton.icon(
                 onPressed: _decrement,
-                child: const Icon(Icons.remove),
-                shape: const CircleBorder(),
-                color: Colors.red[200],
-                textColor: Colors.white,
+                icon: const Icon(Icons.remove),
+                label: Text(''),
               ),
-              RaisedButton(
+              ElevatedButton.icon(
                 onPressed: _increment,
-                child: const Icon(Icons.add),
-                shape: const CircleBorder(),
-                color: Colors.blue[200],
-                textColor: Colors.white,
+                icon: const Icon(Icons.add),
+                label: Text(''),
               ),
             ],
           ),
