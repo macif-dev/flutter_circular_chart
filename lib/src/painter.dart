@@ -54,21 +54,21 @@ void _paintLabel(Canvas canvas, Size size, TextPainter? labelPainter) {
 void _paintChart(Canvas canvas, Size size, CircularChart chart) {
   final Paint segmentPaint = Paint()
     ..style =
-        chart.chartType == CircularChartType.Radial ? PaintingStyle.stroke : PaintingStyle.fill
+    chart.chartType == CircularChartType.Radial ? PaintingStyle.stroke : PaintingStyle.fill
     ..strokeCap = chart.edgeStyle == SegmentEdgeStyle.round ? StrokeCap.round : StrokeCap.butt;
 
   for (final CircularChartStack stack in chart.stacks) {
     for (final segment in stack.segments) {
-      segmentPaint.color = segment.color;
-      segmentPaint.strokeWidth = stack.width ?? 0.0;
+      segmentPaint.color = segment.color!;
+      segmentPaint.strokeWidth = stack.width!;
 
       canvas.drawArc(
         Rect.fromCircle(
           center: Offset(size.width / 2, size.height / 2),
-          radius: stack.radius ?? 0.0,
+          radius: stack.radius!,
         ),
-        stack.startAngle ?? 0 * _kRadiansPerDegree,
-        segment.sweepAngle ?? 0 * _kRadiansPerDegree,
+        stack.startAngle! * _kRadiansPerDegree,
+        segment.sweepAngle! * _kRadiansPerDegree,
         chart.chartType == CircularChartType.Pie,
         segmentPaint,
       );

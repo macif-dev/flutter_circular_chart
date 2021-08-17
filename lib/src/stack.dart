@@ -9,12 +9,12 @@ const double _kMaxAngle = 360.0;
 
 class CircularChartStack implements MergeTweenable<CircularChartStack> {
   CircularChartStack(
-    this.rank,
-    this.radius,
-    this.width,
-    this.startAngle,
-    this.segments,
-  );
+      this.rank,
+      this.radius,
+      this.width,
+      this.startAngle,
+      this.segments,
+      );
 
   final int rank;
   final double? radius;
@@ -23,26 +23,26 @@ class CircularChartStack implements MergeTweenable<CircularChartStack> {
   final List<CircularChartSegment> segments;
 
   factory CircularChartStack.fromData(
-    int stackRank,
-    List<CircularSegmentEntry> entries,
-    Map<String, int>? entryRanks,
-    bool percentageValues,
-    double startRadius,
-    double stackWidth,
-    double startAngle,
-  ) {
+      int stackRank,
+      List<CircularSegmentEntry> entries,
+      Map<String?, int>? entryRanks,
+      bool percentageValues,
+      double startRadius,
+      double stackWidth,
+      double startAngle,
+      ) {
     final double valueSum = percentageValues
         ? 100.0
         : entries.fold(
-            0.0,
-            (double prev, CircularSegmentEntry element) => prev + element.value,
-          );
+      0.0,
+          (double prev, CircularSegmentEntry element) => prev + element.value,
+    );
 
     double previousSweepAngle = 0.0;
     List<CircularChartSegment> segments = List<CircularChartSegment>.generate(entries.length, (i) {
       double sweepAngle = (entries[i].value / valueSum * _kMaxAngle) + previousSweepAngle;
       previousSweepAngle = sweepAngle;
-      int rank = entryRanks != null ? entryRanks[entries[i].rankKey] ?? i : i;
+      int rank = entryRanks![entries[i].rankKey] ?? i;
       return CircularChartSegment(rank, sweepAngle, entries[i].color);
     });
 
@@ -78,10 +78,10 @@ class CircularChartStackTween extends Tween<CircularChartStack> {
 
   @override
   CircularChartStack lerp(double t) => CircularChartStack(
-        begin!.rank,
-        lerpDouble(begin!.radius, end!.radius, t),
-        lerpDouble(begin!.width, end!.width, t),
-        lerpDouble(begin!.startAngle, end!.startAngle, t),
-        _circularSegmentsTween.lerp(t),
-      );
+    begin!.rank,
+    lerpDouble(begin!.radius, end!.radius, t),
+    lerpDouble(begin!.width, end!.width, t),
+    lerpDouble(begin!.startAngle, end!.startAngle, t),
+    _circularSegmentsTween.lerp(t),
+  );
 }

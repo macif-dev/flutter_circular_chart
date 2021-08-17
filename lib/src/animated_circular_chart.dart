@@ -36,7 +36,8 @@ class AnimatedCircularChart extends StatefulWidget {
     this.holeLabel,
     this.labelStyle,
     this.edgeStyle = SegmentEdgeStyle.flat,
-  })  : super(key: key);
+  })  : assert(size != null),
+        super(key: key);
 
   /// The size of the bounding box this chart will be constrained to.
   final Size size;
@@ -113,19 +114,21 @@ class AnimatedCircularChart extends StatefulWidget {
   /// AnimatedCircularChartState animatedCircularChart = AnimatedCircularChart.of(context);
   /// ```
   static AnimatedCircularChartState? of(BuildContext context, {bool nullOk: false}) {
+    assert(context != null);
+    assert(nullOk != null);
 
     final AnimatedCircularChartState? result =
-        context.findAncestorStateOfType<AnimatedCircularChartState>();
+    context.findAncestorStateOfType<AnimatedCircularChartState>();
 
     if (nullOk || result != null) return result;
 
     throw FlutterError(
         'AnimatedCircularChart.of() called with a context that does not contain a AnimatedCircularChart.\n'
-        'No AnimatedCircularChart ancestor could be found starting from the context that was passed to AnimatedCircularChart.of(). '
-        'This can happen when the context provided is from the same StatefulWidget that '
-        'built the AnimatedCircularChart.\n'
-        'The context used was:\n'
-        '  $context');
+            'No AnimatedCircularChart ancestor could be found starting from the context that was passed to AnimatedCircularChart.of(). '
+            'This can happen when the context provided is from the same StatefulWidget that '
+            'built the AnimatedCircularChart.\n'
+            'The context used was:\n'
+            '  $context');
   }
 
   @override
@@ -150,8 +153,8 @@ class AnimatedCircularChartState extends State<AnimatedCircularChart>
     with TickerProviderStateMixin {
   late CircularChartTween _tween;
   late AnimationController _animation;
-  final Map<String, int> _stackRanks = <String, int>{};
-  final Map<String, int> _entryRanks = <String, int>{};
+  final Map<String?, int> _stackRanks = <String?, int>{};
+  final Map<String?, int> _entryRanks = <String?, int>{};
   final TextPainter _labelPainter = TextPainter();
 
   @override
@@ -203,18 +206,16 @@ class AnimatedCircularChartState extends State<AnimatedCircularChart>
 
   void _assignRanks(List<CircularStackEntry> data) {
     for (CircularStackEntry stackEntry in data) {
-      String? _stackEntryRankKey = stackEntry.rankKey;
-      if(_stackEntryRankKey != null) _stackRanks.putIfAbsent(_stackEntryRankKey, () => _stackRanks.length);
+      _stackRanks.putIfAbsent(stackEntry.rankKey, () => _stackRanks.length);
       for (CircularSegmentEntry entry in stackEntry.entries) {
-        String? _stackEntryKey = entry.rankKey;
-        if(_stackEntryKey != null) _entryRanks.putIfAbsent(_stackEntryKey, () => _entryRanks.length);
+        _entryRanks.putIfAbsent(entry.rankKey, () => _entryRanks.length);
       }
     }
   }
 
   void _updateLabelPainter() {
     if (widget.holeLabel != null) {
-      TextStyle _labelStyle = widget.labelStyle ?? Theme.of(context).textTheme.bodyText1!;
+      TextStyle? _labelStyle = widget.labelStyle ?? Theme.of(context).textTheme.bodyText1;
       _labelPainter
         ..text = TextSpan(style: _labelStyle, text: widget.holeLabel)
         ..textDirection = Directionality.of(context)

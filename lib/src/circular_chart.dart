@@ -9,14 +9,14 @@ class CircularChart {
   static const double _kStackWidthFraction = 0.75;
 
   CircularChart(
-    this.stacks,
-    this.chartType, {
-    this.edgeStyle = SegmentEdgeStyle.flat,
-  });
+      this.stacks,
+      this.chartType, {
+        this.edgeStyle = SegmentEdgeStyle.flat,
+      });
 
   final List<CircularChartStack> stacks;
   final CircularChartType chartType;
-  final SegmentEdgeStyle edgeStyle;
+  final SegmentEdgeStyle? edgeStyle;
 
   factory CircularChart.empty({required CircularChartType chartType}) {
     return CircularChart(<CircularChartStack>[], chartType);
@@ -28,8 +28,8 @@ class CircularChart {
     required CircularChartType chartType,
     required bool percentageValues,
     required double startAngle,
-    Map<String, int>? stackRanks,
-    Map<String, int>? entryRanks,
+    Map<String?, int>? stackRanks,
+    Map<String?, int>? entryRanks,
     double? holeRadius,
     SegmentEdgeStyle? edgeStyle,
   }) {
@@ -40,8 +40,8 @@ class CircularChart {
 
     List<CircularChartStack> stacks = List<CircularChartStack>.generate(
       data.length,
-      (i) => CircularChartStack.fromData(
-        stackRanks != null ? stackRanks[data[i].rankKey] ?? i : i,
+          (i) => CircularChartStack.fromData(
+        stackRanks![data[i].rankKey] ?? i,
         data[i].entries,
         entryRanks,
         percentageValues,
@@ -51,7 +51,6 @@ class CircularChart {
       ),
     );
 
-    if(edgeStyle == null) return CircularChart(stacks, chartType);
     return CircularChart(stacks, chartType, edgeStyle: edgeStyle);
   }
 }
@@ -65,8 +64,8 @@ class CircularChartTween extends Tween<CircularChart> {
 
   @override
   CircularChart lerp(double t) => CircularChart(
-        _stacksTween.lerp(t),
-        begin!.chartType,
-        edgeStyle: end!.edgeStyle,
-      );
+    _stacksTween.lerp(t),
+    begin!.chartType,
+    edgeStyle: end!.edgeStyle,
+  );
 }
